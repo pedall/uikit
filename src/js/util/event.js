@@ -1,4 +1,6 @@
-import { $, $$, closest, doc, isArray, isFunction, isString, toNode, toNodes, win, within } from './index';
+import { $, $$, closest, toNode, toNodes, within } from './selector';
+import { doc, win } from './env';
+import {isArray, isFunction, isString} from './lang';
 
 export function on(...args) {
 
@@ -39,12 +41,12 @@ export function once(...args) {
 export function trigger(target, event, detail) {
     return toEventTargets(target).reduce((notCanceled, target) =>
         notCanceled && target.dispatchEvent(createEvent(event, true, true, detail))
-    , true);
+        , true);
 }
 
 export function createEvent(e, bubbles = true, cancelable = false, detail) {
     if (isString(e)) {
-        var event = doc.createEvent('CustomEvent');
+        var event = doc.createEvent('CustomEvent'); // IE 11
         event.initCustomEvent(e, bubbles, cancelable, detail);
         e = event;
     }
@@ -78,7 +80,7 @@ function delegate(element, selector, listener) {
 
             listener.call(this, e);
         }
-    }
+    };
 }
 
 function detail(listener) {

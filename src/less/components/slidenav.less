@@ -23,7 +23,7 @@
 @slidenav-active-color:                         fade(@global-color, 50%);
 
 @slidenav-large-padding-vertical:               10px;
-@slidenav-large-padding-horizontal:             20px;
+@slidenav-large-padding-horizontal:             @slidenav-large-padding-vertical;
 
 
 /* ========================================================================
@@ -75,7 +75,7 @@
 }
 
 
-/* Size modifiers
+/* Size modifier
  ========================================================================== */
 
 .uk-slidenav-large {
@@ -88,8 +88,6 @@
  ========================================================================== */
 
 .uk-slidenav-container {
-    display: -ms-flexbox;
-    display: -webkit-flex;
     display: flex;
     .hook-slidenav-container;
 }

@@ -68,7 +68,7 @@ export default function (UIkit) {
 
         var computed = this.$options.computed;
 
-        this._computeds = {};
+        this._resetComputeds();
 
         if (computed) {
             for (var key in computed) {
@@ -77,9 +77,13 @@ export default function (UIkit) {
         }
     };
 
+    UIkit.prototype._resetComputeds = function () {
+        this._computeds = {};
+    };
+
     UIkit.prototype._initProps = function (props) {
 
-        this._computeds = {};
+        this._resetComputeds();
         assign(this.$props, props || getProps(this.$options, this.$name));
 
         var exclude = [this.$options.computed, this.$options.methods];
@@ -231,7 +235,7 @@ export default function (UIkit) {
             : el || component.$el;
 
         if (isArray(el)) {
-            el.forEach(el => registerEvent(component, assign(event, {el}), key));
+            el.forEach(el => registerEvent(component, assign({}, event, {el}), key));
             return;
         }
 
@@ -265,7 +269,7 @@ export default function (UIkit) {
             if (e.target === e.currentTarget || e.target === e.current) {
                 return handler.call(null, e);
             }
-        }
+        };
     }
 
     function notIn(options, key) {

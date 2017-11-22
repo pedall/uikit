@@ -74,11 +74,13 @@ function plugin(UIkit) {
                         if (this.covers) {
 
                             var min = Math.min(...steps),
-                                max = Math.max(...steps);
+                                max = Math.max(...steps),
+                                down = steps.indexOf(min) < steps.indexOf(max);
 
-                            steps = steps.map(step => step - min);
                             diff = max - min;
-                            pos = `${-1 * Math.max(...steps)}px`;
+
+                            steps = steps.map(step => step - (down ? min : max));
+                            pos = `${down ? -diff : 0}px`;
 
                         } else {
 
@@ -113,20 +115,20 @@ function plugin(UIkit) {
 
             {
 
-                read() {
+                read(data) {
 
-                    delete this._computeds.props;
+                    this._resetComputeds();
 
-                    this._active = !this.media || win.matchMedia(this.media).matches;
+                    data.active = !this.media || win.matchMedia(this.media).matches;
 
-                    if (this._image) {
-                        this._image.dimEl = {
+                    if (data.image) {
+                        data.image.dimEl = {
                             width: this.$el.offsetWidth,
                             height: this.$el.offsetHeight
-                        }
+                        };
                     }
 
-                    if (!isUndefined(this._image) || !this.covers || !this.bgProps.length) {
+                    if ('image' in data || !this.covers || !this.bgProps.length) {
                         return;
                     }
 
@@ -136,10 +138,10 @@ function plugin(UIkit) {
                         return;
                     }
 
-                    this._image = false;
+                    data.image = false;
 
                     getImage(src).then(img => {
-                        this._image = {
+                        data.image = {
                             width: img.naturalWidth,
                             height: img.naturalHeight
                         };
@@ -149,19 +151,18 @@ function plugin(UIkit) {
 
                 },
 
-                write() {
+                write({image, active}) {
 
-                    if (!this._image) {
+                    if (!image) {
                         return;
                     }
 
-                    if (!this._active) {
+                    if (!active) {
                         css(this.$el, {backgroundSize: '', backgroundRepeat: ''});
                         return;
                     }
 
-                    var image = this._image,
-                        dimEl = image.dimEl,
+                    var dimEl = image.dimEl,
                         dim = Dimensions.cover(image, dimEl);
 
                     this.bgProps.forEach(prop => {
@@ -170,14 +171,19 @@ function plugin(UIkit) {
                             attr = prop === 'bgy' ? 'height' : 'width',
                             span = dim[attr] - dimEl[attr];
 
-                        if (!bgPos.match(/%$/)) {
+                        if (!bgPos.match(/%$|0px/)) {
                             return;
                         }
 
                         if (span < diff) {
                             dimEl[attr] = dim[attr] + diff - span;
                         } else if (span > diff) {
-                            this.props[prop].steps = steps.map(step => step - (span - diff) / (100 / parseFloat(bgPos)));
+
+                            bgPos = parseFloat(bgPos);
+
+                            if (bgPos) {
+                                this.props[prop].steps = steps.map(step => step - (span - diff) / (100 / bgPos));
+                            }
                         }
 
                         dim = Dimensions.cover(image, dimEl);
@@ -314,34 +320,30 @@ function plugin(UIkit) {
 
         },
 
-        disconnected() {
-            delete this._prev;
-        },
-
         update: [
 
             {
 
-                read() {
-
-                    this._percent = ease(scrolledOver(this.target) / (this.viewport || 1), this.easing);
-
+                read({percent}) {
+                    return {
+                        prev: percent,
+                        percent: ease(scrolledOver(this.target) / (this.viewport || 1), this.easing)
+                    };
                 },
 
-                write({type}) {
+                write({prev, percent, active}, {type}) {
 
                     if (type !== 'scroll') {
-                        delete this._prev;
+                        prev = false;
                     }
 
-                    if (!this._active) {
+                    if (!active) {
                         this.reset();
                         return;
                     }
 
-                    if (this._prev !== this._percent) {
-                        css(this.$el, this.getCss(this._percent));
-                        this._prev = this._percent;
+                    if (prev !== percent) {
+                        css(this.$el, this.getCss(percent));
                     }
 
                 },
@@ -354,7 +356,7 @@ function plugin(UIkit) {
     });
 
     function ease(percent, easing) {
-        return clamp(percent * (1 - (easing - easing * percent)))
+        return clamp(percent * (1 - (easing - easing * percent)));
     }
 
     function parseColor(el, color) {

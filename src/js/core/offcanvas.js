@@ -1,5 +1,5 @@
 import { Modal } from '../mixin/index';
-import { $, addClass, css, doc, docEl, hasClass, height, isTouch, once, removeClass, transitionend, trigger, unwrap, width, win, wrapAll } from '../util/index';
+import { $, addClass, css, doc, docEl, hasClass, height, isTouch, once, removeClass, trigger, unwrap, width, win, wrapAll } from '../util/index';
 
 var scroll;
 
@@ -58,7 +58,7 @@ export default function (UIkit) {
             },
 
             clsContentAnimation({mode, clsContentAnimation}) {
-                return mode !== 'push' && mode !== 'reveal' ? '' : clsContentAnimation
+                return mode !== 'push' && mode !== 'reveal' ? '' : clsContentAnimation;
             },
 
             transitionElement({mode}) {
@@ -164,7 +164,7 @@ export default function (UIkit) {
 
                     var active = this.getActive();
                     if (this.mode === 'none' || active && active !== this && active !== this.prev) {
-                        trigger(this.panel, transitionend);
+                        trigger(this.panel, 'transitionend');
                     }
                 }
             },
@@ -181,7 +181,7 @@ export default function (UIkit) {
                     }
 
                     if (!this.overlay) {
-                        scroll = {x: win.pageXOffset, y: win.pageYOffset}
+                        scroll = {x: win.pageXOffset, y: win.pageYOffset};
                     } else if (!scroll) {
                         var {scrollLeft: x, scrollTop: y} = this.content;
                         scroll = {x, y};
