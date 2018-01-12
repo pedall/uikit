@@ -1,5 +1,5 @@
-import { createEvent, doc, docEl, fastdom, hasAttr, Observer } from '../util/index';
 import { getComponentName } from './component';
+import { createEvent, doc, docEl, fastdom, hasAttr, Observer } from '../util/index';
 
 export default function (UIkit) {
 
@@ -42,28 +42,13 @@ export default function (UIkit) {
         UIkit._initialized = true;
     }
 
-    function apply(node, fn) {
-
-        if (node.nodeType !== 1 || hasAttr(node, 'uk-no-boot')) {
-            return;
-        }
-
-        fn(node);
-        node = node.firstElementChild;
-        while (node) {
-            var next = node.nextElementSibling;
-            apply(node, fn);
-            node = next;
-        }
-    }
-
     function applyMutation(mutation) {
 
-        var {attributeName, target, type} = mutation;
+        var {target, type} = mutation;
 
         var update = type !== 'attributes'
             ? applyChildList(mutation)
-            : attributeName === 'href' || applyAttribute(mutation);
+            : applyAttribute(mutation);
 
         update && UIkit.update(createEvent('update', true, false, {mutation: true}), target, true);
 
@@ -108,6 +93,20 @@ export default function (UIkit) {
         }
 
         return true;
+    }
+    function apply(node, fn) {
+
+        if (node.nodeType !== 1 || hasAttr(node, 'uk-no-boot')) {
+            return;
+        }
+
+        fn(node);
+        node = node.firstElementChild;
+        while (node) {
+            var next = node.nextElementSibling;
+            apply(node, fn);
+            node = next;
+        }
     }
 
 }

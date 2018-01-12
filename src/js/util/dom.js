@@ -1,11 +1,11 @@
 import { attr } from './attr';
-import { hasClass, addClass, removeClass, removeClasses } from './class';
 import { css } from './style';
-import { trigger, on, once } from './event';
-import { toNodes, toNode, matches } from './selector';
-import { startsWith, isString, assign, isNumeric, toNumber, intersectRect, clamp, each, isUndefined } from './lang';
+import { doc, docEl, win } from './env';
 import { height, width } from './position';
-import { docEl, doc, win } from './env';
+import { on, once, trigger } from './event';
+import { matches, toNode, toNodes } from './selector';
+import { addClass, hasClass, removeClass, removeClasses } from './class';
+import { assign, clamp, each, intersectRect, isNumeric, isString, isUndefined, Promise, startsWith, toNumber } from './lang';
 
 export const isRtl = attr(docEl, 'dir') === 'rtl';
 
@@ -29,7 +29,7 @@ export function ready(fn) {
         unbind2 = on(win, 'load', handle);
 }
 
-export function transition(element, props, duration = 400, transition = 'linear') {
+export function transition(element, props, duration = 400, timing = 'linear') {
 
     return Promise.all(toNodes(element).map(element =>
         new Promise((resolve, reject) => {
@@ -51,7 +51,7 @@ export function transition(element, props, duration = 400, transition = 'linear'
             }, false, ({target}) => element === target);
 
             addClass(element, 'uk-transition');
-            css(element, assign({transition: `all ${duration}ms ${transition}`}, props));
+            css(element, assign({transition: `all ${duration}ms ${timing}`}, props));
 
         })
     ));
@@ -89,7 +89,7 @@ export function animate(element, animation, duration = 200, origin, out) {
                 requestAnimationFrame(() =>
                     Promise.resolve().then(() =>
                         animate.apply(null, arguments).then(resolve, reject)
-                    ) 
+                    )
                 );
                 return;
             }
@@ -99,7 +99,7 @@ export function animate(element, animation, duration = 200, origin, out) {
             if (startsWith(animation, animationPrefix)) {
 
                 if (origin) {
-                    cls += ` ${animationPrefix}${origin}`;
+                    cls += ` uk-transform-origin-${origin}`;
                 }
 
                 if (out) {
@@ -203,20 +203,25 @@ function positionTop(element) {
     return top;
 }
 
-export function getIndex(i, elements, current = 0) {
+export function getIndex(i, elements, current = 0, finite = false) {
 
     elements = toNodes(elements);
 
     var length = elements.length;
 
-    i = (isNumeric(i)
+    i = isNumeric(i)
         ? toNumber(i)
         : i === 'next'
             ? current + 1
             : i === 'previous'
                 ? current - 1
-                : index(elements, i)
-    ) % length;
+                : index(elements, i);
+
+    if (finite) {
+        return clamp(i, 0, length - 1);
+    }
+
+    i %= length;
 
     return i < 0 ? i + length : i;
 }
@@ -345,7 +350,11 @@ export function after(ref, element) {
 
 function insertNodes(element, fn) {
     element = isString(element) ? fragment(element) : element;
-    return 'length' in element ? toNodes(element).map(fn) : fn(element);
+    return element
+        ? 'length' in element
+            ? toNodes(element).map(fn)
+            : fn(element)
+        : null;
 }
 
 export function remove(element) {

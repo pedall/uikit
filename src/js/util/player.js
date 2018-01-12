@@ -1,9 +1,9 @@
 import { win } from './env';
-import { assign, includes, isString } from './lang';
-import { toNode } from './selector';
 import { attr } from './attr';
-import Promise from './promise';
 import { once } from './event';
+import Promise from './promise';
+import { toNode } from './selector';
+import { assign, includes, isString } from './lang';
 
 var id = 0;
 
@@ -79,7 +79,9 @@ export class Player {
         if (this.isIFrame()) {
             this.enableApi().then(() => post(this.el, {func: 'playVideo', method: 'play'}));
         } else if (this.isHTML5()) {
-            this.el.play();
+            try {
+                this.el.play();
+            } catch (e) {}
         }
     }
 
