@@ -5,7 +5,7 @@ function plugin(UIkit) {
     }
 
     var {util, mixin} = UIkit;
-    var {append, attr, doc, fastdom, flipPosition, includes, isTouch, isVisible, matches, on, pointerDown, pointerEnter, pointerLeave, remove, within} = util;
+    var {append, attr, doc, flipPosition, hasAttr, includes, isTouch, isVisible, matches, on, pointerDown, pointerEnter, pointerLeave, remove, within} = util;
 
     var actives = [];
 
@@ -30,12 +30,14 @@ function plugin(UIkit) {
             clsPos: 'uk-tooltip'
         },
 
-        connected() {
-            fastdom.mutate(() => attr(this.$el, {title: null, 'aria-expanded': false}));
+        beforeConnect() {
+            this._hasTitle = hasAttr(this.$el, 'title');
+            attr(this.$el, {title: '', 'aria-expanded': false});
         },
 
         disconnected() {
             this.hide();
+            attr(this.$el, {title: this._hasTitle ? this.title : null, 'aria-expanded': null});
         },
 
         methods: {
@@ -106,11 +108,11 @@ function plugin(UIkit) {
                 }
             },
 
-            'blur': 'hide',
+            blur: 'hide',
 
             [pointerLeave](e) {
                 if (!isTouch(e)) {
-                    this.hide()
+                    this.hide();
                 }
             }
 
