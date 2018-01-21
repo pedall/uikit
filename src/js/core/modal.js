@@ -99,12 +99,13 @@ export default function (UIkit) {
              </div>
         `, options);
 
-        on(dialog.$el, 'hidden', ({target, current}) => {
-            if (target === current) {
+        dialog.show();
+
+        on(dialog.$el, 'hidden', ({target, currentTarget}) => {
+            if (target === currentTarget) {
                 dialog.$destroy(true);
             }
         });
-        dialog.show();
 
         return dialog;
     };
@@ -165,7 +166,7 @@ export default function (UIkit) {
                 e.preventDefault();
                 resolve(input.value);
                 resolved = true;
-                prompt.hide()
+                prompt.hide();
             });
             on(prompt.$el, 'hide', () => {
                 if (!resolved) {
@@ -179,6 +180,6 @@ export default function (UIkit) {
     UIkit.modal.labels = {
         ok: 'Ok',
         cancel: 'Cancel'
-    }
+    };
 
 }
