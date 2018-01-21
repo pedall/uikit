@@ -887,7 +887,7 @@ function animate(element, animation, duration, origin, out) {
             if (startsWith(animation, animationPrefix)) {
 
                 if (origin) {
-                    cls += " " + animationPrefix + origin;
+                    cls += " uk-transform-origin-" + origin;
                 }
 
                 if (out) {
@@ -5497,6 +5497,8 @@ function Modal$1 (UIkit) {
 
         var dialog = UIkit.modal((" <div class=\"uk-modal\"> <div class=\"uk-modal-dialog\">" + content + "</div> </div> "), options);
 
+        dialog.show();
+
         on(dialog.$el, 'hidden', function (ref) {
             var target = ref.target;
             var currentTarget = ref.currentTarget;
@@ -5505,7 +5507,6 @@ function Modal$1 (UIkit) {
                 dialog.$destroy(true);
             }
         });
-        dialog.show();
 
         return dialog;
     };
@@ -6473,7 +6474,7 @@ function Sticky (UIkit) {
             if (this.isActive) {
                 this.isActive = false;
                 this.hide();
-                removeClass(this.$el, this.clsInactive);
+                removeClass(this.selTarget, this.clsInactive);
             }
 
             remove(this.placeholder);
@@ -10877,7 +10878,7 @@ function plugin$12(UIkit) {
 
         attrs: true,
 
-        mixins: [mixin.togglable, mixin.position],
+        mixins: [mixin.container, mixin.togglable, mixin.position],
 
         props: {
             delay: Number,
@@ -10919,7 +10920,7 @@ function plugin$12(UIkit) {
 
                 clearTimeout(this.showTimer);
 
-                this.tooltip = append(UIkit.container, ("<div class=\"" + (this.clsPos) + "\" aria-hidden><div class=\"" + (this.clsPos) + "-inner\">" + (this.title) + "</div></div>"));
+                this.tooltip = append(this.container, ("<div class=\"" + (this.clsPos) + "\" aria-hidden><div class=\"" + (this.clsPos) + "-inner\">" + (this.title) + "</div></div>"));
 
                 attr(this.$el, 'aria-expanded', true);
 
