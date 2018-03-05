@@ -1,0 +1,171 @@
+/*
+	UIkit theme for G4M3R website
+	Minor modifications only
+
+	Created by Pedall
+*/
+// Default UIkit theme
+@import "../src/less/uikit.theme.less";
+
+// Color scheme (Discord-based)
+@global-primary-background: #7289DA;
+@global-secondary-background: #23272A;
+@global-third-background: #FFFFFF;
+@global-link-color: @global-primary-background;
+@global-link-hover-color: #5d6eab;
+@global-hover-color: #21AC7B;
+
+// Reduce navbar item height
+@navbar-item-height: 70px;
+.hook-navbar-nav-item() {
+  height: @navbar-item-height;
+}
+
+.hook-navbar-item() {
+  height: @navbar-item-height;
+}
+
+.hook-navbar-toggle() {
+  height: @navbar-item-height;
+}
+
+// Card modifications
+.hook-card-misc() {
+  // Add class for card with border
+  .uk-card-border {
+    border: 1px solid @global-primary-background;
+  }
+
+  // Reposition badge for small cards
+  .uk-card-small .uk-card-badge {
+    top: 20px;
+    right: 20px;
+  }
+}
+
+.custom-color-blurple {
+  color: @global-primary-background
+}
+.custom-color-dark {
+  color: @global-secondary-background
+}
+.custom-color-green {
+  color: @global-hover-color
+}
+.custom-color-white {
+  color: @global-third-background
+}
+
+.custom-background-blurple {
+  background-color: @global-primary-background
+}
+.custom-background-dark {
+  background-color: @global-secondary-background
+}
+.custom-background-green {
+  background-color: @global-hover-color
+}
+.custom-background-white {
+  background-color: @global-third-background
+}
+
+// button modifications
+@button-text-hover-color: @global-inverse-color;
+@button-default-hover-background: @global-primary-background;
+@button-default-hover-color: @global-inverse-color;
+@button-primary-hover-background: @global-primary-background;
+@button-primary-hover-color: @global-inverse-color;
+@button-secondary-hover-background: @global-primary-background;
+@button-secondary-hover-color: @global-inverse-color;
+
+/*
+ * Third Button
+ */
+
+@button-third-background:                   @global-third-background;
+@button-third-color:                        @global-secondary-background;
+@button-third-hover-background:             @global-primary-background;
+@button-third-hover-color:                  @global-inverse-color;
+@button-third-active-background:            darken(@global-primary-background, 15%);
+@button-third-active-color:                 @global-inverse-color;
+
+.uk-button-third:disabled {
+    background-color: @button-disabled-background;
+    color: @button-disabled-color;
+    .hook-button-disabled;
+}
+
+.hook-button-third() {}
+.hook-button-third-hover() {}
+.hook-button-third-active() {}
+
+@inverse-button-third-background:          @inverse-global-primary-background;
+@inverse-button-third-color:               @inverse-global-inverse-color;
+@inverse-button-third-hover-background:    @global-primary-background;
+@inverse-button-third-hover-color:         @inverse-global-inverse-color;
+@inverse-button-third-active-background:   darken(@inverse-button-third-background, 10%);
+@inverse-button-third-active-color:        @inverse-global-inverse-color;
+
+.uk-button-third {
+    background-color: @button-third-background;
+    color: @button-third-color;
+    .hook-button-third;
+}
+
+/* Hover + Focus */
+.uk-button-third:hover,
+.uk-button-third:focus {
+    background-color: @button-third-hover-background;
+    color: @button-third-hover-color;
+    .hook-button-third-hover;
+}
+
+/* OnClick + Active */
+.uk-button-third:active,
+.uk-button-third.uk-active {
+    background-color: @button-third-active-background;
+    color: @button-third-active-color;
+    .hook-button-third-active;
+}
+
+// navbar modifications
+@navbar-nav-item-hover-color: @global-hover-color;
+@navbar-nav-item-active-color: @global-primary-background;
+
+// nav modifications
+
+@nav-default-item-hover-color: @global-hover-color;
+@nav-default-item-active-color: @global-primary-background;
+@nav-default-sublist-item-color: @global-muted-color;
+@nav-default-sublist-item-hover-color: @global-hover-color;
+
+@nav-primary-item-hover-color: @global-hover-color;
+@nav-primary-item-active-color: @global-primary-background;
+
+@nav-primary-sublist-item-color: @global-muted-color;
+@nav-primary-sublist-item-hover-color: @global-hover-color;
+
+// sub-nav modifications
+@subnav-item-hover-color: @global-hover-color;
+@subnav-pill-item-hover-background: @global-muted-background;
+@subnav-pill-item-hover-color: @global-hover-color;
+
+// dropdown nav-itm modifications
+@dropdown-nav-item-hover-color: @global-hover-color;
+@dropdown-nav-sublist-item-hover-color: @global-hover-color;
+
+// slidenav modifications
+@slidenav-color: fade(@global-third-background, 50%);
+@slidenav-hover-color: fade(@global-third-background, 90%);
+@slidenav-active-color: fade(@global-third-background, 50%);
+
+@inverse-slidenav-color: fade(@global-secondary-background, 70%);
+@inverse-slidenav-hover-color: fade(@global-secondary-background, 95%);
+@inverse-slidenav-active-color: fade(@global-secondary-background, 95%);
+
+// Add class for medium size font
+.hook-text-misc() {
+  .uk-text-medium {
+    font-size: 18px;
+  }
+}
